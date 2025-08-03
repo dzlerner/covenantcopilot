@@ -39,3 +39,39 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# logs
+logs/
+*.log
+
+# database
+*.db
+*.sqlite
+
+# backups and temporary files
+*.backup
+*.bak
+*.tmp
+*.temp
+*~
+.#*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+config/secrets.json

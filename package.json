@@ -6,22 +6,41 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup": "tsx scripts/quick-setup.ts",
+    "process-docs": "tsx scripts/run-document-processing.ts",
+    "check-docs": "tsx scripts/check-database.ts",
+    "crawl-comprehensive": "tsx scripts/comprehensive-crawler.ts",
+    "crawl-status": "tsx scripts/crawl-status.ts",
+    "setup-crawler": "chmod +x scripts/setup-cron-job.sh && scripts/setup-cron-job.sh",
+    "setup-crawler-db": "echo 'Run this SQL in Supabase SQL Editor:' && cat scripts/setup-crawler-schema.sql"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@supabase/supabase-js": "^2.53.0",
+    "@types/pg": "^8.15.5",
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.1",
+    "lucide-react": "^0.536.0",
+    "next": "15.4.5",
+    "openai": "^5.11.0",
+    "pdf-parse": "^1.1.1",
+    "pg": "^8.16.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.5"
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.4.5",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "tsx": "^4.20.3",
+    "typescript": "^5"
   }
 }
