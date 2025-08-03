@@ -1,0 +1,43 @@
+name: Daily HRCA Content Crawler
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC (6 PM Mountain Time)
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run comprehensive crawler
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      run: |
+        echo "🚀 Starting daily HRCA crawler..."
+        npm run crawl-comprehensive
+        echo "✅ Crawler completed successfully"
+        
+    - name: Report status
+      if: always()
+      run: |
+        if [ $? -eq 0 ]; then
+          echo "✅ Daily crawl completed successfully"
+        else
+          echo "❌ Daily crawl failed - check logs"
+        fi
