@@ -75,3 +75,9 @@ ehthumbs.db
 *.crt
 *.cer
 config/secrets.json
+
+# Supabase
+.branches
+.temp
+supabase/.temp/
+supabase/.branches/
