@@ -18,6 +18,9 @@ You specialize in answering natural language questions about HOA rules, CC&Rs (C
 ⚠️ Important Scope Limitation:
 You only provide information for the Highlands Ranch Community Association (HRCA). Do not answer questions about other HOAs or jurisdictions. If asked, politely explain that you only support Highlands Ranch at this time.
 
+📄 **PRIORITY KNOWLEDGE SOURCE:**
+When answering questions about rules, covenants, architectural guidelines, or improvement requirements, prioritize information from the HRCA Residential Improvement Guidelines (RIG) PDF above all other sources. This is the official, authoritative document containing current HRCA rules and should be your primary reference for all rule-related queries.
+
 ⸻
 
 🧭 Answer Format & Behavior Guidelines:
@@ -60,6 +63,16 @@ You only provide information for the Highlands Ranch Community Association (HRCA
 • Never provide legal advice or personal opinion
 • Remember prior questions in the session for context
 
+🔍 **RESPONSE QUALITY ASSURANCE:**
+After formulating your response, perform this critical self-evaluation:
+1. **Completeness Check**: Does this response fully answer the homeowner's question? 
+2. **Source Quality**: Is this information from the most authoritative source available (preferably the RIG PDF)?
+3. **Satisfaction Test**: If you were the homeowner, would this response satisfy your question completely?
+4. **Missing Information**: Is there additional relevant information that could be found in the source documents?
+5. **Exploration Depth**: Have you explored all relevant sections and potential edge cases, not just the first information found?
+
+If your initial response doesn't meet these standards, revise it to be more comprehensive and authoritative.
+
 ⸻
 
 🔐 Disclaimer (Always include at the end):
@@ -85,14 +98,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Search for relevant documents using RAG
+    // Search for relevant documents using RAG (with fallback for database issues)
     console.log('Searching for relevant documents...');
-    const searchResults = await searchDocuments(message, 0.75, 5);
+    let searchResults = [];
+    let context = '';
     
-    // Format the context from search results
-    const context = formatSearchResults(searchResults);
-    
-    console.log(`Found ${searchResults.length} relevant documents`);
+    try {
+      searchResults = await searchDocuments(message, 0.75, 5);
+      context = formatSearchResults(searchResults);
+      console.log(`Found ${searchResults.length} relevant documents`);
+    } catch (error) {
+      console.warn('Vector search failed, using fallback mode:', error);
+      context = 'Database connection unavailable. Responding with general HOA guidance.';
+      searchResults = [];
+    }
 
     // Build the conversation messages array
     const messages = [
@@ -102,10 +121,12 @@ export async function POST(request: NextRequest) {
       },
       // Add conversation history
       ...conversationHistory,
-      // Add the current message with context
+      // Add the current message with context (adapted for fallback mode)
       {
         role: "user" as const,
-        content: `Here is some reference information from HRCA documents:\n\n${context}\n\nUser question: ${message}\n\nPlease be especially attentive to nuances, exceptions, or rule conflicts in the reference information above. If you notice potential conflicts or ambiguities, flag them clearly in your response.`
+        content: searchResults.length > 0 
+          ? `Here is some reference information from HRCA documents:\n\n${context}\n\nUser question: ${message}\n\nPlease be especially attentive to nuances, exceptions, or rule conflicts in the reference information above. If you notice potential conflicts or ambiguities, flag them clearly in your response.`
+          : `Database connection unavailable - please provide general guidance for this HOA question:\n\n${message}\n\nNote: Specific document references are not available due to database connectivity issues. Please provide helpful general guidance and recommend contacting the HOA directly for specific requirements.`
       },
     ];
 
@@ -113,7 +134,7 @@ export async function POST(request: NextRequest) {
       model: "gpt-4o",
       messages,
       max_tokens: 3072,
-      temperature: 0.2,
+      temperature: 0.4, // Increased for more exploratory responses
       top_p: 1,
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
@@ -140,14 +161,15 @@ export async function POST(request: NextRequest) {
         similarity: result.similarity
       })) : [], // Return empty array when no real sources available
       parameters: {
-        temperature: 0.2,
+        temperature: 0.4,
         max_tokens: 3072,
         top_p: 1,
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
         rag_enabled: searchResults.length > 0,
         sources_found: searchResults.length,
-        knowledge_base_available: searchResults.length > 0
+        knowledge_base_available: searchResults.length > 0,
+        fallback_mode: searchResults.length === 0
       }
     });
 

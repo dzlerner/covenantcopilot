@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as cheerio from 'cheerio';
 import { URL } from 'url';
+import pdfParse from 'pdf-parse';
 import { supabase } from '../lib/supabase';
 import { embedDocuments } from '../lib/embeddings';
 import { config } from 'dotenv';
@@ -61,13 +62,13 @@ class ComprehensiveCrawler {
       crawlDelay: 2000, // 2 seconds between requests
       maxPagesPerSession: 500,
       respectRobots: true,
-      allowedFileTypes: ['.html', '.htm', '.php', '.asp', '.aspx', '.jsp', ''],
+      allowedFileTypes: ['.html', '.htm', '.php', '.asp', '.aspx', '.jsp', '', '.pdf'],
       excludePatterns: [
         /\/admin\//i,
         /\/login/i,
         /\/logout/i,
         /\/search\?/i,
-        /\.pdf$/i,
+        // PDFs are now allowed - removed PDF exclusion
         /\.doc$/i,
         /\.docx$/i,
         /\.xls$/i,
@@ -113,9 +114,13 @@ class ComprehensiveCrawler {
   }
 
   async discoverStartingUrls(): Promise<string[]> {
+    // PRIORITY #1: Always process the core RIG PDF first!
+    const priorityUrls = [
+      'https://hrcaonline.org/Portals/0/Documents/covenants/2025-06_ResidentialmprovementGuidelines.pdf?ver=3ZUlKLMOpiB58cPyCpGDJw%3d%3d'
+    ];
+
     const startingUrls = [
       `${this.config.baseUrl}`,
-      `${this.config.baseUrl}/sitemap.xml`,
       `${this.config.baseUrl}/Property-Owners`,
       `${this.config.baseUrl}/Property-Owners/Residential`,
       `${this.config.baseUrl}/Property-Owners/Architectural-Review`,
@@ -128,13 +133,15 @@ class ComprehensiveCrawler {
     ];
 
     // Try to get sitemap URLs
-    const sitemapUrls = await this.parseSitemap(`${this.config.baseUrl}/sitemap.xml`);
+    const sitemapUrls = await this.parseSitemap(`${this.config.baseUrl}/sitemap.aspx`);
     if (sitemapUrls.length > 0) {
       console.log(`📄 Found ${sitemapUrls.length} URLs in sitemap`);
-      return [...new Set([...startingUrls, ...sitemapUrls])];
+      console.log(`🎯 Prioritizing RIG PDF as first item to process`);
+      return [...new Set([...priorityUrls, ...startingUrls, ...sitemapUrls])];
     }
 
-    return startingUrls;
+    console.log(`🎯 Prioritizing RIG PDF as first item to process`);
+    return [...new Set([...priorityUrls, ...startingUrls])];
   }
 
   async parseSitemap(sitemapUrl: string): Promise<string[]> {
@@ -170,11 +177,58 @@ class ComprehensiveCrawler {
     }
   }
 
+  async fetchWithRetry(url: string, options: RequestInit = {}, maxRetries: number = 3): Promise<Response> {
+    let lastError: Error | null = null;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`📡 Fetch attempt ${attempt}/${maxRetries} for: ${url}`);
+        
+        // Add timeout to fetch request
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        const response = await fetch(url, {
+          ...options,
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return response;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        console.log(`❌ Fetch attempt ${attempt} failed: ${lastError.message}`);
+        
+        if (attempt < maxRetries) {
+          // Exponential backoff: 1s, 2s, 4s
+          const delay = Math.pow(2, attempt - 1) * 1000;
+          console.log(`⏳ Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+    
+    throw lastError || new Error('All fetch attempts failed');
+  }
+
   async crawlPage(url: string): Promise<CrawlResult | null> {
     try {
       console.log(`🔍 Crawling: ${url}`);
       
-      const response = await fetch(url, {
+      // Check if this is a PDF file
+      const isPdf = url.toLowerCase().includes('.pdf');
+      
+      if (isPdf) {
+        console.log(`📄 Processing PDF: ${url}`);
+        return await this.processPdfUrl(url);
+      }
+      
+      const response = await this.fetchWithRetry(url, {
         headers: {
           'User-Agent': this.config.userAgent,
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
@@ -274,7 +328,18 @@ class ComprehensiveCrawler {
   async storeDiscoveredLinks(links: DiscoveredLink[]): Promise<void> {
     if (!supabase || links.length === 0) return;
 
-    const linkData = links.map(link => ({
+    // Deduplicate links by URL to prevent "row affected second time" error
+    const uniqueLinks = links.reduce((acc, link) => {
+      const existing = acc.find(l => l.url === link.url);
+      if (!existing) {
+        acc.push(link);
+      }
+      return acc;
+    }, [] as DiscoveredLink[]);
+
+    console.log(`🔗 Storing ${uniqueLinks.length} unique links (from ${links.length} total found)`);
+
+    const linkData = uniqueLinks.map(link => ({
       url: link.url,
       source_url: link.sourceUrl,
       link_type: link.linkType,
@@ -301,37 +366,84 @@ class ComprehensiveCrawler {
   async storePageContent(result: CrawlResult): Promise<void> {
     if (!supabase || !result.content.trim()) return;
 
-    // Generate embeddings for content chunks
-    const chunks = this.chunkText(result.content, 1000, 200);
-    const embeddings = await embedDocuments(chunks);
+    try {
+      // Generate embeddings for content chunks
+      const chunks = this.chunkText(result.content, 1000, 200);
+      console.log(`📄 Generating embeddings for ${chunks.length} chunks from: ${result.url}`);
+      const embeddings = await embedDocuments(chunks);
 
-    const documentData = chunks.map((chunk, index) => ({
-      content: chunk,
-      embedding: embeddings[index],
-      source_url: result.url,
-      page_title: result.title,
-      meta_description: result.metaDescription,
-      content_type: result.contentType,
-      response_status: result.status,
-      crawled_at: new Date().toISOString(),
-      last_modified: result.lastModified?.toISOString(),
-      content_hash: this.hashContent(chunk)
-    }));
+      const documentData = chunks.map((chunk, index) => ({
+        content: chunk,
+        embedding: embeddings[index],
+        source_url: result.url,
+        page_title: result.title,
+        meta_description: result.metaDescription,
+        content_type: result.contentType,
+        response_status: result.status,
+        crawled_at: new Date().toISOString(),
+        last_modified: result.lastModified?.toISOString(),
+        content_hash: this.hashContent(chunk)
+      }));
 
-    // Remove existing documents for this URL
-    await supabase
-      .from('documents')
-      .delete()
-      .eq('source_url', result.url);
+      // Remove existing documents for this URL
+      await supabase
+        .from('documents')
+        .delete()
+        .eq('source_url', result.url);
 
-    // Insert new documents
-    const { error } = await supabase
-      .from('documents')
-      .insert(documentData);
+      // Insert new documents
+      const { error } = await supabase
+        .from('documents')
+        .insert(documentData);
 
-    if (error) {
+      if (error) {
+        console.error(`Error storing content for ${result.url}:`, error);
+        throw error;
+      }
+      
+      console.log(`✅ Stored ${chunks.length} document chunks for: ${result.url}`);
+    } catch (error) {
       console.error(`Error storing content for ${result.url}:`, error);
       throw error;
+    }
+  }
+
+  async processPdfUrl(url: string): Promise<CrawlResult | null> {
+    try {
+      // Fetch PDF content
+      const response = await this.fetchWithRetry(url, {
+        headers: {
+          'User-Agent': this.config.userAgent,
+          'Accept': 'application/pdf'
+        }
+      });
+
+      // Get PDF as buffer
+      const pdfBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(pdfBuffer);
+      
+      // Parse PDF content
+      console.log(`📄 Parsing PDF content from: ${url}`);
+      const pdfData = await pdfParse(buffer);
+      
+      const cleanContent = pdfData.text.replace(/\s+/g, ' ').trim();
+      console.log(`📄 Extracted ${cleanContent.length} characters from PDF`);
+
+      return {
+        url,
+        content: cleanContent,
+        title: 'HRCA Residential Improvement Guidelines',
+        metaDescription: 'Official HRCA guidelines for residential improvements and HOA rules',
+        links: [], // PDFs don't have clickable links we can extract
+        contentType: 'application/pdf',
+        status: response.status,
+        lastModified: response.headers.get('last-modified') 
+          ? new Date(response.headers.get('last-modified')!) 
+          : undefined
+      };
+    } catch (error) {
+      console.error(`Error processing PDF ${url}:`, error);
+      return null;
     }
   }
 
@@ -342,7 +454,7 @@ class ComprehensiveCrawler {
     
     const chunks: string[] = [];
     let start = 0;
-    const maxChunks = 1000; // Prevent runaway chunking
+    const maxChunks = 20; // Reasonable limit for web pages
     
     while (start < text.length && chunks.length < maxChunks) {
       const end = Math.min(start + chunkSize, text.length);

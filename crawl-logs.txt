@@ -1,0 +1,244 @@
+
+> covenantcopilot@0.1.0 crawl-comprehensive
+> tsx scripts/comprehensive-crawler.ts
+
+[dotenv@17.2.1] injecting env (3) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+🚀 Starting HRCA Comprehensive Crawler
+🚀 Starting comprehensive crawl session...
+📊 Crawl session started: 9dde0dc2-a5f4-4a46-8bad-f8d2779b2482
+🗺️ Checking sitemap: https://hrcaonline.org/sitemap.xml
+❌ Sitemap not found: 404
+🎯 Starting with 11 seed URLs
+📄 Processing 1/500: https://hrcaonline.org
+🔍 Crawling: https://hrcaonline.org
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org
+📄 Processing 2/500: https://hrcaonline.org/Property-Owners
+🔍 Crawling: https://hrcaonline.org/Property-Owners
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Property-Owners
+📄 Processing 3/500: https://hrcaonline.org/Property-Owners/Residential
+🔍 Crawling: https://hrcaonline.org/Property-Owners/Residential
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Property-Owners/Residential
+📄 Processing 4/500: https://hrcaonline.org/Property-Owners/Architectural-Review
+🔍 Crawling: https://hrcaonline.org/Property-Owners/Architectural-Review
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Property-Owners/Architectural-Review
+📄 Processing 5/500: https://hrcaonline.org/Property-Owners/Forms
+🔍 Crawling: https://hrcaonline.org/Property-Owners/Forms
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Property-Owners/Forms
+📄 Processing 6/500: https://hrcaonline.org/Property-Owners/Residential/Covenants-Improvements
+🔍 Crawling: https://hrcaonline.org/Property-Owners/Residential/Covenants-Improvements
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Property-Owners/Residential/Covenants-Improvements
+📄 Processing 7/500: https://hrcaonline.org/About
+🔍 Crawling: https://hrcaonline.org/About
+✅ Successfully processed: https://hrcaonline.org/About
+📄 Processing 8/500: https://hrcaonline.org/Community
+🔍 Crawling: https://hrcaonline.org/Community
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Community
+📄 Processing 9/500: https://hrcaonline.org/Services
+🔍 Crawling: https://hrcaonline.org/Services
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Services
+📄 Processing 10/500: https://hrcaonline.org/Contact
+🔍 Crawling: https://hrcaonline.org/Contact
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Contact
+📊 Progress: 10 processed, 201 queued, 10 successful, 0 failed
+📄 Processing 11/500: https://hrcaonline.org/#main
+🔍 Crawling: https://hrcaonline.org/#main
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/#main
+📄 Processing 12/500: https://hrcaonline.org/Contact-Us
+🔍 Crawling: https://hrcaonline.org/Contact-Us
+✅ Successfully processed: https://hrcaonline.org/Contact-Us
+📄 Processing 13/500: https://hrcaonline.org/Events
+🔍 Crawling: https://hrcaonline.org/Events
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Events
+📄 Processing 14/500: https://hrcaonline.org/Property-Owners/Assessments
+🔍 Crawling: https://hrcaonline.org/Property-Owners/Assessments
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Property-Owners/Assessments
+📄 Processing 15/500: https://hrcaonline.org/Recreation/Backcountry-Wilderness-Area/Wildcat-Regional-Park-Project
+🔍 Crawling: https://hrcaonline.org/Recreation/Backcountry-Wilderness-Area/Wildcat-Regional-Park-Project
+✅ Successfully processed: https://hrcaonline.org/Recreation/Backcountry-Wilderness-Area/Wildcat-Regional-Park-Project
+📄 Processing 16/500: https://hrcaonline.org/Events/Details/westridge-refresh-updates-closures
+🔍 Crawling: https://hrcaonline.org/Events/Details/westridge-refresh-updates-closures
+✅ Successfully processed: https://hrcaonline.org/Events/Details/westridge-refresh-updates-closures
+📄 Processing 17/500: https://hrcaonline.org/Recreation/Northridge-Rec-Center
+🔍 Crawling: https://hrcaonline.org/Recreation/Northridge-Rec-Center
+✅ Successfully processed: https://hrcaonline.org/Recreation/Northridge-Rec-Center
+📄 Processing 18/500: https://hrcaonline.org/Recreation/Southridge-Rec-Center
+🔍 Crawling: https://hrcaonline.org/Recreation/Southridge-Rec-Center
+✅ Successfully processed: https://hrcaonline.org/Recreation/Southridge-Rec-Center
+📄 Processing 19/500: https://hrcaonline.org/Recreation/Eastridge-Rec-Center
+🔍 Crawling: https://hrcaonline.org/Recreation/Eastridge-Rec-Center
+✅ Successfully processed: https://hrcaonline.org/Recreation/Eastridge-Rec-Center
+📄 Processing 20/500: https://hrcaonline.org/Recreation/Westridge-Rec-Center
+🔍 Crawling: https://hrcaonline.org/Recreation/Westridge-Rec-Center
+Error storing content for https://hrcaonline.org/Recreation/Westridge-Rec-Center: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '    at node:internal/deps/undici/undici:15363:13\n' +
+    '    at async ComprehensiveCrawler.storePageContent (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:328:23)\n' +
+    '    at async ComprehensiveCrawler.runComprehensiveCrawl (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:456:13)\n' +
+    '    at async main (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:535:5)',
+  hint: '',
+  code: ''
+}
+❌ Error processing https://hrcaonline.org/Recreation/Westridge-Rec-Center: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '    at node:internal/deps/undici/undici:15363:13\n' +
+    '    at async ComprehensiveCrawler.storePageContent (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:328:23)\n' +
+    '    at async ComprehensiveCrawler.runComprehensiveCrawl (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:456:13)\n' +
+    '    at async main (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:535:5)',
+  hint: '',
+  code: ''
+}
+📊 Progress: 20 processed, 283 queued, 19 successful, 1 failed
+📄 Processing 21/500: https://hrcaonline.org/Recreation/Backcountry-Wilderness-Area
+🔍 Crawling: https://hrcaonline.org/Recreation/Backcountry-Wilderness-Area
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Recreation/Backcountry-Wilderness-Area
+📄 Processing 22/500: https://hrcaonline.org/Recreation/Pools#schedules
+🔍 Crawling: https://hrcaonline.org/Recreation/Pools#schedules
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/Recreation/Pools#schedules
+📄 Processing 23/500: https://hrcaonline.org/Recreation/Gyms-Sport-Courts/Gym-Schedule
+🔍 Crawling: https://hrcaonline.org/Recreation/Gyms-Sport-Courts/Gym-Schedule
+Error storing content for https://hrcaonline.org/Recreation/Gyms-Sport-Courts/Gym-Schedule: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '    at node:internal/deps/undici/undici:15363:13\n' +
+    '    at async ComprehensiveCrawler.storePageContent (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:328:23)\n' +
+    '    at async ComprehensiveCrawler.runComprehensiveCrawl (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:456:13)\n' +
+    '    at async main (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:535:5)',
+  hint: '',
+  code: ''
+}
+❌ Error processing https://hrcaonline.org/Recreation/Gyms-Sport-Courts/Gym-Schedule: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '    at node:internal/deps/undici/undici:15363:13\n' +
+    '    at async ComprehensiveCrawler.storePageContent (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:328:23)\n' +
+    '    at async ComprehensiveCrawler.runComprehensiveCrawl (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:456:13)\n' +
+    '    at async main (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:535:5)',
+  hint: '',
+  code: ''
+}
+📄 Processing 24/500: https://hrcaonline.org/Activities/Fitness/Group-Fitness-Schedule
+🔍 Crawling: https://hrcaonline.org/Activities/Fitness/Group-Fitness-Schedule
+✅ Successfully processed: https://hrcaonline.org/Activities/Fitness/Group-Fitness-Schedule
+📄 Processing 25/500: https://hrcaonline.org/Events/Details/architectural-review-committee-meeting-13
+🔍 Crawling: https://hrcaonline.org/Events/Details/architectural-review-committee-meeting-13
+✅ Successfully processed: https://hrcaonline.org/Events/Details/architectural-review-committee-meeting-13
+📄 Processing 26/500: https://hrcaonline.org/logoff
+🔍 Crawling: https://hrcaonline.org/logoff
+Error storing links: {
+  code: '21000',
+  details: null,
+  hint: 'Ensure that no rows proposed for insertion within the same command have duplicate constrained values.',
+  message: 'ON CONFLICT DO UPDATE command cannot affect row a second time'
+}
+✅ Successfully processed: https://hrcaonline.org/logoff
+📄 Processing 27/500: https://hrcaonline.org/Property-Owners#main
+🔍 Crawling: https://hrcaonline.org/Property-Owners#main
+Error storing content for https://hrcaonline.org/Property-Owners#main: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '    at node:internal/deps/undici/undici:15363:13\n' +
+    '    at async ComprehensiveCrawler.storePageContent (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:328:23)\n' +
+    '    at async ComprehensiveCrawler.runComprehensiveCrawl (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:456:13)\n' +
+    '    at async main (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:535:5)',
+  hint: '',
+  code: ''
+}
+❌ Error processing https://hrcaonline.org/Property-Owners#main: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '    at node:internal/deps/undici/undici:15363:13\n' +
+    '    at async ComprehensiveCrawler.storePageContent (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:328:23)\n' +
+    '    at async ComprehensiveCrawler.runComprehensiveCrawl (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:456:13)\n' +
+    '    at async main (/Users/david.lerner/covenantcopilot/scripts/comprehensive-crawler.ts:535:5)',
+  hint: '',
+  code: ''
+}
+📄 Processing 28/500: https://hrcaonline.org/Recreation/Recreation-Overview#membership-cards
+🔍 Crawling: https://hrcaonline.org/Recreation/Recreation-Overview#membership-cards

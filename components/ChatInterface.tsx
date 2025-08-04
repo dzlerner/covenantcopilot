@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ChatMessage from '@/components/ChatMessage';
 import ChatInput from '@/components/ChatInput';
@@ -18,9 +18,12 @@ export default function ChatInterface() {
   const initialQuery = searchParams.get('q') || '';
   
   const [messages, setMessages] = useState<Message[]>([]);
+  const initialResponseFetched = useRef(false);
 
   useEffect(() => {
-    if (initialQuery) {
+    if (initialQuery && !initialResponseFetched.current) {
+      console.log('🔥 Fetching initial response for:', initialQuery);
+      initialResponseFetched.current = true;
       // Add the initial user question
       const userMessage: Message = {
         id: '1',
@@ -62,7 +65,7 @@ export default function ChatInterface() {
           }
 
           const aiResponse: Message = {
-            id: '2',
+            id: 'ai-response-' + Date.now(),
             text: data.message,
             isUser: false,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -74,7 +77,7 @@ export default function ChatInterface() {
           console.error('Error getting initial AI response:', error);
           
           const errorMessage: Message = {
-            id: '2',
+            id: 'error-response-' + Date.now(),
             text: 'Sorry, I encountered an error while processing your request. Please try again.',
             isUser: false,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -90,6 +93,7 @@ export default function ChatInterface() {
   }, [initialQuery]);
 
   const handleSendMessage = async (messageText: string) => {
+    console.log('🔥 Sending follow-up message:', messageText);
     const newMessage: Message = {
       id: Date.now().toString(),
       text: messageText,
