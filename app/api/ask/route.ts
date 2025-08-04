@@ -125,8 +125,8 @@ export async function POST(request: NextRequest) {
       {
         role: "user" as const,
         content: searchResults.length > 0 
-          ? `Here is some reference information from HRCA documents:\n\n${context}\n\nUser question: ${message}\n\nPlease be especially attentive to nuances, exceptions, or rule conflicts in the reference information above. If you notice potential conflicts or ambiguities, flag them clearly in your response.`
-          : `Database connection unavailable - please provide general guidance for this HOA question:\n\n${message}\n\nNote: Specific document references are not available due to database connectivity issues. Please provide helpful general guidance and recommend contacting the HOA directly for specific requirements.`
+          ? `Here is some reference information from HRCA documents:\n\n${context}\n\nUser question: ${message}\n\nPlease be especially attentive to nuances, exceptions, or rule conflicts in the reference information above. If you notice potential conflicts or ambiguities, flag them clearly in your response. If the reference information doesn't contain sufficient detail to fully answer the question, acknowledge this and direct the user to consult the complete HRCA Residential Improvement Guidelines PDF for comprehensive requirements.`
+          : `Database connection unavailable - please provide general guidance for this HOA question:\n\n${message}\n\nNote: Specific document references are not available due to database connectivity issues. Please provide helpful general guidance and recommend contacting the HOA directly or reviewing the HRCA Residential Improvement Guidelines PDF for specific requirements.`
       },
     ];
 
@@ -159,7 +159,16 @@ export async function POST(request: NextRequest) {
         pdf_page: result.pdf_page,
         section_title: result.section_title,
         similarity: result.similarity
-      })) : [], // Return empty array when no real sources available
+      })) : [
+        // Always provide RIG PDF as fallback source
+        {
+          content: "For complete and detailed requirements, refer to the official HRCA Residential Improvement Guidelines",
+          source_url: "https://hrcaonline.org/Portals/0/Documents/covenants/2025-06_ResidentialmprovementGuidelines.pdf?ver=3ZUlKLMOpiB58cPyCpGDJw%3d%3d",
+          pdf_page: null,
+          section_title: "HRCA Residential Improvement Guidelines",
+          similarity: 1.0
+        }
+      ],
       parameters: {
         temperature: 0.4,
         max_tokens: 3072,
