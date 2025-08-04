@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     let context = '';
     
     try {
-      searchResults = await searchDocuments(message, 0.75, 5);
+      searchResults = await searchDocuments(message, 0.5, 8); // Lowered threshold, increased results
       context = formatSearchResults(searchResults);
       console.log(`Found ${searchResults.length} relevant documents`);
     } catch (error) {
